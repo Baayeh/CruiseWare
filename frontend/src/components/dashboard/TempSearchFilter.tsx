@@ -1,0 +1,279 @@
+import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
+import { useEffect, useRef, useState } from 'react';
+import { debounceTime, distinctUntilChanged, fromEvent, map } from 'rxjs';
+import { selectProduct, setAllProducts } from '../../features/products';
+import { selectRole, setAllRoles } from '../../features/settings';
+import { useAppDispatch, useAppSelector, useFetch } from '../../hooks';
+
+interface SearchFilterProps {
+  title: string;
+  feature: string;
+  data?: SupplierProps[] | ReceiverProps[] | null;
+  outbounds?: OutboundOrderProps[] | null;
+  inbounds?: InboundOrderProps[] | null;
+  roles?: UserRole[] | null;
+  users?: UserProps[] | null;
+  dispatchAction: ActionCreatorWithPayload<any, string>;
+  resetMethod: () => Promise<void>;
+}
+
+/**
+ * Renders a search filter component.
+ *
+ * @param {SearchFilterProps} title - The title of the filter.
+ * @param {function} setQuery - The function to set the search query.
+ * @return {JSX.Element} A section containing a search bar for filtering.
+ */
+const TempSearchFilter: React.FC<SearchFilterProps> = ({
+  title,
+  resetMethod,
+  dispatchAction,
+  feature,
+  data,
+  outbounds,
+  inbounds,
+  roles,
+  users,
+}) => {
+  const searchRef = useRef<HTMLInputElement | any>();
+  const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
+  const { allProducts } = useAppSelector(selectProduct);
+
+  const { fetchData } = useFetch(`/product`, setAllProducts);
+
+  const { allRoles } = useAppSelector(selectRole);
+  const { fetchData: fetchRoles } = useFetch('/roles', setAllRoles);
+
+  // get role name
+  const getRoleName = (roleID: number) => {
+    const role = allRoles?.find((r) => r.id === roleID);
+    return role ? role.name : null;
+  };
+
+  useEffect(() => {
+    if (feature === 'user') {
+      fetchRoles();
+    }
+  }, [feature]);
+
+  useEffect(() => {
+    if (searchRef && data) {
+      fromEvent(searchRef?.current, 'keyup')
+        .pipe(
+          map((event: any) => (event.target as HTMLInputElement)?.value),
+          debounceTime(500),
+          distinctUntilChanged()
+        )
+        .subscribe((value) => {
+          setLoading(true);
+          if (data) {
+            if (feature === 'supplier' || feature === 'receiver') {
+              const filteredData = data.filter((item) => {
+                return item.name.toLowerCase().includes(value.toLowerCase());
+              });
+              setLoading(false);
+              dispatch(dispatchAction(filteredData));
+            }
+          }
+        });
+    }
+
+    if (searchRef && outbounds) {
+      fetchData();
+      fromEvent(searchRef?.current, 'keyup')
+        .pipe(
+          map((event: any) => (event.target as HTMLInputElement)?.value),
+          debounceTime(500),
+          distinctUntilChanged()
+        )
+        .subscribe((value) => {
+          if (value === '') {
+            resetMethod();
+          }
+          setLoading(true);
+          if (outbounds) {
+            if (feature === 'outboundOrder') {
+              const filteredData = outbounds.filter((item) => {
+                const product = allProducts?.find(
+                  (product) => product.id === item.productId
+                );
+                return (
+                  item.orderId.toLowerCase().includes(value.toLowerCase()) ||
+                  product?.name.toLowerCase().includes(value.toLowerCase()) ||
+                  item.orderStatus.toLowerCase().includes(value.toLowerCase())
+                );
+              });
+              setLoading(false);
+              dispatch(dispatchAction(filteredData));
+            }
+          }
+        });
+    }
+
+    if (searchRef && inbounds) {
+      fetchData();
+      fromEvent(searchRef?.current, 'keyup')
+        .pipe(
+          map((event: any) => (event.target as HTMLInputElement)?.value),
+          debounceTime(500),
+          distinctUntilChanged()
+        )
+        .subscribe((value) => {
+          if (value === '') {
+            resetMethod();
+          }
+          setLoading(true);
+          if (inbounds) {
+            if (feature === 'inboundOrder') {
+              const filteredData = inbounds.filter((item) => {
+                const product = allProducts?.find(
+                  (product) => product.id === item.productId
+                );
+                return (
+                  product?.name.toLowerCase().includes(value.toLowerCase()) ||
+                  item.orderStatus.toLowerCase().includes(value.toLowerCase())
+                );
+              });
+              setLoading(false);
+              dispatch(dispatchAction(filteredData));
+            }
+          }
+        });
+    }
+  }, [data, outbounds, inbounds]);
+
+  useEffect(() => {
+    if (searchRef && roles) {
+      fromEvent(searchRef?.current, 'keyup')
+        .pipe(
+          map((event: any) => (event.target as HTMLInputElement)?.value),
+          debounceTime(500),
+          distinctUntilChanged()
+        )
+        .subscribe((value) => {
+          if (value === '') {
+            resetMethod();
+          }
+          setLoading(true);
+          if (roles) {
+            if (feature === 'role') {
+              const filteredData = roles.filter((item) => {
+                return (
+                  item?.name.toLowerCase().includes(value.toLowerCase()) ||
+                  item.description.toLowerCase().includes(value.toLowerCase())
+                );
+              });
+              setLoading(false);
+              dispatch(dispatchAction(filteredData));
+            }
+          }
+        });
+    }
+  }, [roles]);
+
+  useEffect(() => {
+    if (searchRef && users) {
+      fromEvent(searchRef?.current, 'keyup')
+        .pipe(
+          map((event: any) => (event.target as HTMLInputElement)?.value),
+          debounceTime(500),
+          distinctUntilChanged()
+        )
+        .subscribe((value) => {
+          if (value === '') {
+            resetMethod();
+          }
+          setLoading(true);
+          if (users) {
+            if (feature === 'user') {
+              const filteredData = users.filter((item) => {
+                const roleName = getRoleName(item.roleID);
+                return (
+                  item.firstName.toLowerCase().includes(value.toLowerCase()) ||
+                  item.lastName.toLowerCase().includes(value.toLowerCase()) ||
+                  roleName?.toLowerCase().includes(value.toLowerCase())
+                );
+              });
+              setLoading(false);
+              dispatch(dispatchAction(filteredData));
+            }
+          }
+        });
+    }
+  }, [users]);
+
+  return (
+    <div className="search-bar sm:w-[14rem] lg:w-[20rem] relative">
+      <div>
+        <label
+          htmlFor="default-search"
+          className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+        >
+          Search
+        </label>
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            {loading ? (
+              <svg
+                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            ) : (
+              <svg
+                className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                />
+              </svg>
+            )}
+          </div>
+          <input
+            type="search"
+            ref={searchRef}
+            id="default-search"
+            className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder={`Search ${title}`}
+            aria-label={`Search ${title}`}
+          />
+          <button
+            type="button"
+            className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            onClick={() => {
+              resetMethod();
+              searchRef.current.value = '';
+            }}
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+export default TempSearchFilter;

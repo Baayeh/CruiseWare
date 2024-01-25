@@ -1,0 +1,129 @@
+section#auth-layout {
+  @apply w-full min-h-screen relative text-[#e8e8e8] before:content-[''];
+
+  background-image: url('https://res.cloudinary.com/dskl0qde4/image/upload/v1685463692/OIP_qrmxa5.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  &::before {
+    @apply absolute inset-0 z-10;
+
+    background: linear-gradient(50deg, #030711, #141926f3, #030711c6);
+  }
+
+  nav.auth-nav {
+    @apply relative w-full lg:w-[62%] lg:mx-auto lg:px-0 z-20 flex items-center gap-x-10 px-[2rem] py-4 md:px-[5rem];
+
+    h1 {
+      @apply uppercase text-2xl text-[#ededed];
+
+      span {
+        @apply text-[#ff5722] tracking-widest font-medium;
+
+        text-shadow: 1px 1px 3px #404040;
+      }
+    }
+
+    a {
+      @apply transition duration-300 ease-in-out;
+
+      &:hover {
+        color: #ff5722;
+      }
+    }
+  }
+
+  section#login {
+    @apply relative z-20 px-[2rem] sm:px-[5rem] py-4 mt-[4rem] sm:mt-[10rem] lg:mt-[6rem];
+
+    div.login-title {
+      h1 {
+        @apply relative mt-4 text-3xl sm:text-4xl before:content-[''];
+      }
+
+      p {
+        @apply text-sm;
+
+        a {
+          @apply text-[#ff5722];
+
+          &:hover {
+            @apply underline;
+          }
+        }
+      }
+    }
+
+    div.form-wrapper {
+      @apply mt-10 sm:w-[25rem] lg:w-[30rem] mr-auto;
+    }
+  }
+
+  section#register {
+    @apply relative min-h-[calc(100vh-4rem)] z-20 px-[2rem] sm:px-[5rem] pt-4 pb-10 flex flex-col justify-center;
+
+    div.register-title {
+      h1 {
+        @apply relative mt-1 text-2xl sm:text-3xl before:content-[''];
+      }
+
+      p {
+        @apply text-sm;
+
+        a {
+          @apply text-[#ff5722];
+
+          &:hover {
+            @apply underline;
+          }
+        }
+      }
+    }
+
+    div.form-wrapper {
+      @apply mt-10 sm:w-[30rem] sm:mr-auto lg:w-[70%] lg:mx-auto lg:mt-0;
+
+      div.full-name {
+        @apply sm:flex gap-x-5;
+      }
+
+      button.register-btn {
+        @apply bg-[#ff5722] p-3 rounded hover:bg-[#ff3f03] transition-colors duration-300 ease-in-out;
+
+        .spinner {
+          width: 1.5rem;
+          height: 1.5rem;
+          border-radius: 50%;
+          border: 4px solid;
+          border-color: #e8e8e8;
+          border-right-color: #ff5722;
+        }
+      }
+
+      button.register-loading-btn {
+        @apply w-full flex justify-center gap-x-3 bg-[#ff3f03] bg-opacity-50 p-3 rounded cursor-not-allowed;
+
+        .spinner {
+          @apply w-[1.5rem] h-[1.5rem] border-[4px] border-[#e8e8e8] rounded-full border-r-[#ff3f03];
+
+          animation: register-spinner 1s infinite linear;
+        }
+
+        @keyframes register-spinner {
+          to {
+            transform: rotate(1turn);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 765px) {
+  section#auth-layout {
+    &::before {
+      background: linear-gradient(100deg, #030711, #030711f3, #030711c6);
+    }
+  }
+}

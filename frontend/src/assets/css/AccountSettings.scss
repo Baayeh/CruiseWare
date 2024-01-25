@@ -1,0 +1,7 @@
+section#account_settings {
+  nav.account-nav {
+    .active_tab {
+      @apply text-[color:var(--accent-primary)] bg-[color:var(--border-color)];
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  },
+  "source": {
+    "include": ["src"],
+    "includePattern": ".+\\.tsx$",
+    "excludePattern": "(node_modules/|docs)"
+  },
+  "plugins": [
+    "plugins/markdown",
+    "node_modules/jsdoc-babel"
+    // "node_modules/better-docs/component",
+    // "better-docs/typescript",
+    // "better-docs/category"
+  ],
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true
+    // "better-docs": {
+    //   "name": "Cruise Ware Documentation",
+    //   "title": "Cruise Ware"
+    // }
+  },
+  "babel": {
+    "extensions": ["tsx"],
+    "ignore": ["**/*.(test|spec).ts"],
+    "babelrc": false,
+    "presets": [
+      ["@babel/preset-env", { "targets": { "node": true } }],
+      "@babel/preset-typescript"
+    ],
+    "plugins": [
+      "@babel/proposal-class-properties",
+      "@babel/proposal-object-rest-spread"
+    ]
+  },
+  "opts": {
+    "encoding": "utf8",
+    "destination": "./public/docs/",
+    "recurse": true,
+    "verbose": true,
+    "readme": "README.md"
+  }
+}

@@ -1,0 +1,16 @@
+section#products {
+  section#products-table {
+    div.product_card {
+      @apply dark:shadow-none p-3 rounded-lg;
+
+      background: var(--card-bg);
+      box-shadow: var(--card-shadow);
+
+      div.product_img {
+        img {
+          transition: transform 0.3s ease;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+section#dashboard-layout {
+  @apply relative bg-[var(--primary-bg)] text-[var(--text-primary)] min-h-screen;
+
+  div.nav-header {
+    @apply px-5 pt-5;
+
+    nav.dashboard-nav {
+      ul {
+        li {
+          a {
+            @apply box-border py-2 relative hover:text-[color:var(--accent-primary)];
+
+            &::before {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              display: block;
+              height: 3px;
+              width: 0;
+              background-color: var(--accent-primary);
+              transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
+              transform-origin: center;
+              border-radius: 10px;
+            }
+          }
+
+          a.nav-active {
+            @apply font-medium relative text-[color:var(--accent-primary)];
+
+            &::before {
+              width: 50%;
+              transform: translateX(50%) scaleX(1);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  main {
+    @apply px-5 mt-8 pb-16;
+  }
+
+  section#task-bar {
+    @apply fixed w-full bottom-0 px-5 py-1 border-t-2 border-[color:var(--accent-primary)] z-20 shadow lg:shadow-none bg-[color:var(--secondary-bg)] lg:bg-[var(--glass-bg)] flex flex-row-reverse sm:flex-row justify-between items-center;
+
+    div.taskbar-profile {
+      button {
+        @apply flex sm:flex-row-reverse lg:flex-row items-center px-4 py-2 gap-x-2 text-sm rounded-md hover:bg-[var(--border-color)] transition-colors duration-300 ease-in-out;
+      }
+    }
+
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+
+  // Overview Card
+  div.summary-card {
+    @apply dark:shadow-none h-[10rem];
+
+    background: var(--card-bg);
+    box-shadow: var(--card-shadow);
+  }
+}

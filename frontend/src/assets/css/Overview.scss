@@ -1,0 +1,23 @@
+section#overview {
+  section.suppliers-orders {
+    div.orders-card,
+    div.suppliers-card {
+      @apply dark:shadow-none;
+
+      background: var(--card-bg);
+      box-shadow: var(--card-shadow);
+    }
+  }
+
+  div#charts {
+    @apply grid sm:grid-cols-2 gap-5 sm:gap-10 mt-10 mb-5 min-h-[20rem];
+
+    div.inventory-chart,
+    div.stock-levels-chart {
+      @apply dark:shadow-none;
+
+      background: var(--card-bg);
+      box-shadow: var(--card-shadow);
+    }
+  }
+}

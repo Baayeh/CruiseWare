@@ -1,0 +1,23 @@
+section.outbound {
+  div.breadcrumbs {
+    p {
+      a.link {
+        @apply transition-all duration-300 ease-in-out;
+        color: rgb(107 114 128);
+
+        &:hover {
+          color: #e8e8e8;
+        }
+      }
+
+      &:last-child {
+        a.link {
+          color: #ff5722;
+          border: 1px solid var(--border-color);
+          border-radius: 5px;
+          padding: 0.25rem 0.5rem;
+        }
+      }
+    }
+  }
+}

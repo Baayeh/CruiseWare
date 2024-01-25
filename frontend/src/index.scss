@@ -1,0 +1,539 @@
+@import 'flowbite/dist/flowbite.css';
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,400;0,500;0,600;0,700;0,800;0,900;1,300&display=swap');
+
+@import './assets/css/customTheme.scss';
+
+/**
+ * This CSS file imports the Lara Light Indigo theme from PrimeReact and the PrimeReact and PrimeIcons libraries.
+ * These styles are necessary for the proper rendering of PrimeReact components.
+ */
+@import 'primereact/resources/themes/lara-light-indigo/theme.css';
+@import 'primereact/resources/primereact.min.css';
+@import 'primeicons/primeicons.css';
+
+/**
+ * This CSS file includes the base, components, and utilities styles from the Tailwind CSS framework.
+ * These styles are necessary for the proper rendering of Tailwind CSS classes in the project.
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #e8e8e8;
+  min-height: 100vh;
+  color: #030711;
+  scroll-behavior: smooth;
+  scroll-padding-top: 74px;
+}
+
+/*************************************
+  * Reset flowbite styles for inputs *
+*************************************/
+[type='text']:focus,
+[type='email']:focus,
+[type='url']:focus,
+[type='password']:focus,
+[type='number']:focus,
+[type='date']:focus,
+[type='datetime-local']:focus,
+[type='month']:focus,
+[type='search']:focus,
+[type='time']:focus,
+[type='week']:focus,
+[multiple]:focus,
+select:focus {
+  outline: none;
+  border-color: transparent;
+  --tw-ring-color: transparent;
+  --tw-ring-shadow: transparent;
+}
+
+[type='tel']:focus,
+textarea:focus {
+  border-color: #cccccc;
+  outline: none;
+  --tw-ring-color: transparent;
+  --tw-ring-shadow: transparent;
+}
+
+/***************
+  * SCROLL BAR *
+****************/
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--secondary-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border: 2px solid var(--secondary-bg);
+  border-radius: 100vw;
+
+  &:hover {
+    background-color: var(--accent-secondary);
+  }
+}
+
+@supports (scrollbar-color: red blue) {
+  * {
+    scrollbar-color: var(--accent-primary) var(--secondary-bg);
+    scrollbar-width: thin;
+  }
+}
+
+/***************
+  * SPINNER *
+****************/
+div.spinner {
+  width: 44.8px;
+  height: 44.8px;
+  animation: spinner-y0fdc1 2s infinite ease;
+  transform-style: preserve-3d;
+
+  div {
+    background-color: rgba(255, 87, 34, 0.2);
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    border: 2.2px solid #ff5722;
+
+    &:nth-of-type(1) {
+      transform: translateZ(-22.4px) rotateY(180deg);
+    }
+
+    &:nth-of-type(2) {
+      transform: rotateY(-270deg) translateX(50%);
+      transform-origin: top right;
+    }
+
+    &:nth-of-type(3) {
+      transform: rotateY(270deg) translateX(-50%);
+      transform-origin: center left;
+    }
+
+    &:nth-of-type(4) {
+      transform: rotateX(90deg) translateY(-50%);
+      transform-origin: top center;
+    }
+
+    &:nth-of-type(5) {
+      transform: rotateX(-90deg) translateY(50%);
+      transform-origin: bottom center;
+    }
+
+    &:nth-of-type(6) {
+      transform: translateZ(22.4px);
+    }
+  }
+}
+
+/***************
+  * SCROLL TOP *
+****************/
+div.scroll-top-btn {
+  @apply fixed bottom-20 right-10 z-40;
+
+  button {
+    @apply bg-[#fff] text-[#ff5722] p-3 rounded-full transition duration-300 ease-in-out;
+
+    &:hover {
+      @apply bg-[#d8d8d8] -translate-y-1;
+    }
+  }
+}
+
+/********************
+  * LOADING BUTTON *
+********************/
+.custom-btn {
+  @apply w-full text-[#e8e8e8] dark:text-[color:var(--text-primary)] bg-[#ff5722] p-3 rounded hover:bg-[#ff3f03] transition-colors duration-300 ease-in-out;
+}
+
+.loading-btn {
+  &:disabled {
+    cursor: not-allowed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgb(255 63 3 / 0.7) !important;
+    color: #c2c2c2;
+  }
+
+  .spinner {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 4px solid #c2c2c2;
+    border-right-color: #922403;
+    animation: login-spinner 1s infinite linear;
+  }
+
+  @keyframes login-spinner {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+}
+
+/***************
+  * TABLES *
+****************/
+div#suppliers-table-overview {
+  table.p-datatable-table {
+    tr {
+      background-color: transparent;
+
+      th {
+        background-color: transparent;
+        color: var(--text-primary);
+
+        span.p-sortable-column-icon {
+          color: var(--text-secondary);
+        }
+      }
+
+      th.p-sortable-column.p-highlight {
+        color: var(--text-primary);
+
+        span.p-sortable-column-icon {
+          color: var(--text-secondary);
+        }
+      }
+
+      th.p-sortable-column:focus {
+        box-shadow: none;
+      }
+    }
+
+    tbody {
+      tr {
+        color: var(--text-secondary);
+
+        td {
+          border-color: var(--border-color);
+        }
+      }
+    }
+  }
+}
+
+table {
+  border-collapse: collapse;
+
+  tr {
+    &:nth-of-type(2n) {
+      @apply bg-slate-50 dark:bg-gray-950/30;
+    }
+  }
+
+  tr.suppliers-table__row {
+    border: 1px transparent solid;
+    position: relative;
+    z-index: 0;
+
+    &.active {
+      border: 1px red solid;
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  th,
+  td {
+    padding: 1rem;
+  }
+}
+
+ul[role='table'] {
+  li[role='rowgroup'] {
+    ul[role='row'] {
+      @apply grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 items-center transition ease-in-out duration-300;
+
+      &:nth-of-type(2n) {
+        @apply bg-slate-50 dark:bg-gray-950/30;
+      }
+
+      &.active {
+        @apply text-[color:var(--text-dark)] dark:text-[color:var(--text-light)];
+        background-color: var(--text-secondary) !important;
+
+        button {
+          &:first-child {
+            @apply border-[color:var(--text-dark)] dark:border-[color:var(--text-light)] hover:border-[color:var(--accent-primary)] dark:hover:border-[color:var(--accent-primary)];
+
+            svg {
+              @apply text-[color:var(--text-dark)] dark:text-[color:var(--text-light)];
+            }
+          }
+        }
+      }
+
+      li[role='columnheader'],
+      li[role='cell'] {
+        padding: 1rem;
+      }
+
+      li[role='columnheader'] {
+        @apply font-bold;
+      }
+
+      li[data-head='actions'],
+      li[data-cell='action'] {
+        @apply justify-self-end;
+      }
+    }
+  }
+}
+
+/***************
+  * CHARTS *
+****************/
+div.inventory-chart {
+  div#apexchartsinventory-chart {
+    margin: 0 auto;
+  }
+}
+
+div.stock-levels-chart {
+  #SvgjsG1632,
+  #SvgjsG1614 {
+    text {
+      fill: var(--text-secondary) !important;
+    }
+  }
+}
+
+/*********************
+  * TEXT SELECTION *
+*********************/
+label.disable-text-selection {
+  -moz-user-select: none; /* firefox */
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE*/
+  user-select: none; /* Standard syntax */
+}
+
+/*********************************
+  * SETTINGS MENU ON THE TASKBAR *
+*********************************/
+li.settings-menu {
+  a.p-menuitem-link {
+    span {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+/*********************************
+  * SKELETON *
+*********************************/
+div.skeleton-group {
+  span.MuiSkeleton-rectangular {
+    &:nth-of-type(2n) {
+      @apply bg-slate-50 dark:bg-gray-950/30;
+    }
+  }
+}
+
+/***************
+  * DIALOGS *
+****************/
+div.taskbar-mask {
+  @apply h-[92%] sm:h-[95%];
+
+  z-index: 10 !important;
+
+  div#taskbar-dialog {
+    @apply w-[100dvw] sm:w-[60dvw];
+    box-shadow: var(--dialog-shadow);
+
+    div.p-dialog-header,
+    div.p-dialog-content {
+      background: var(--glass-bg);
+      -webkit-backdrop-filter: blur(5px);
+      backdrop-filter: blur(5px);
+      color: var(--text-primary);
+    }
+
+    div.p-dialog-header {
+      border: 1px solid var(--border-color);
+    }
+
+    div.p-dialog-footer {
+      text-align: start;
+      padding: 0.5rem 1rem;
+      background-color: var(--secondary-bg);
+
+      div.taskbar-profile {
+        button {
+          @apply flex items-center px-4 py-2 gap-x-2 text-sm rounded-md hover:bg-[var(--border-color)] transition-colors duration-300 ease-in-out;
+        }
+      }
+
+      div.logout-action {
+        button {
+          @apply p-2 rounded-md hover:bg-[var(--border-color)] transition-colors duration-300 ease-in-out;
+        }
+      }
+    }
+  }
+}
+
+div.notification-mask {
+  @apply h-[95%] lg:h-[91%];
+
+  z-index: 10 !important;
+
+  div#notification-dialog {
+    @apply w-[50dvw] h-[50dvw] lg:w-[22dvw] lg:h-[22dvw] overflow-hidden;
+
+    .p-dialog-footer {
+      @apply hidden;
+    }
+  }
+}
+
+div.create-new-mask {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  color: var(--text-primary);
+
+  div#new-inventory-dialog,
+  div#new-supplier-dialog {
+    @apply w-[100%] sm:w-[65dvw] lg:w-[40dvw];
+
+    div.p-dialog-header,
+    div.p-dialog-content {
+      background: var(--secondary-bg);
+      color: var(--text-primary);
+    }
+  }
+}
+
+div.delete-mask {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  color: var(--text-primary);
+
+  div#delete-dialog {
+    @apply w-full sm:w-[60dvw] lg:w-[35dvw];
+
+    div.p-dialog-header,
+    div.p-dialog-content,
+    div.p-dialog-footer {
+      background: var(--secondary-bg);
+      color: var(--text-primary);
+    }
+
+    div.p-dialog-header {
+      @apply p-3;
+
+      div.p-dialog-title {
+        @apply text-base;
+      }
+
+      div.p-dialog-header-icons {
+        button {
+          @apply text-xs border bg-[color:var(--border-color)] rounded hover:text-[color:var(--text-primary)] focus:shadow-none;
+
+          svg {
+            width: 12px;
+            height: 12px;
+          }
+        }
+      }
+    }
+
+    div.p-dialog-content {
+      @apply border-y px-0 py-4 border-[color:var(--border-color)];
+    }
+
+    div.p-dialog-footer {
+      @apply text-center py-4;
+
+      button {
+        @apply w-full rounded-md text-sm;
+      }
+    }
+  }
+}
+
+div.p-dialog-mask {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  color: var(--text-primary);
+
+  div#delete-product-dialog {
+    div.p-dialog-header,
+    div.p-dialog-content,
+    div.p-dialog-footer {
+      background: var(--secondary-bg);
+      color: var(--text-primary);
+    }
+  }
+}
+
+// Instagram icon
+.instagram {
+  color: #fff;
+  background: linear-gradient(
+    45deg,
+    #405de6,
+    #5851db,
+    #833ab4,
+    #c13584,
+    #e1306c,
+    #fd1d1d
+  );
+}
+
+/*****************
+  * LOCK SCREEN *
+*****************/
+div#lock-screen {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/******************
+  * COLOR SCHEMES *
+******************/
+[color-scheme='dark'] {
+  --text-primary: var(--text-dark);
+  --text-secondary: var(--text-dark-2);
+  --primary-bg: var(--dark-primary-bg);
+  --secondary-bg: var(--dark-secondary-bg);
+  --accent-primary: var(--dark-accent);
+  --accent-secondary: var(--dark-accent-2);
+  --border-color: var(--dark-border);
+  --glass-bg: var(--dark-glass-bg);
+  --dialog-shadow: var(--dark-dialog-shadow);
+  --card-bg: var(--dark-card-bg);
+  --card-shadow: var(--dark-card-shadow);
+}
+
+[color-scheme='light'] {
+  --text-primary: var(--text-light);
+  --text-secondary: var(--text-light-2);
+  --primary-bg: var(--light-primary-bg);
+  --secondary-bg: var(--light-secondary-bg);
+  --accent-primary: var(--light-accent);
+  --accent-secondary: var(--light-accent-2);
+  --border-color: var(--light-border);
+  --glass-bg: var(--light-glass-bg);
+  --dialog-shadow: var(--light-dialog-shadow);
+  --card-bg: var(--light-card-bg);
+  --card-shadow: var(--light-card-shadow);
+}
