@@ -1,0 +1,298 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Business {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  email             String              @unique
+  phone             String?
+  website           String?
+  industry          String
+  regStatus         Boolean
+  regNumber         String?
+  colour            String?
+  description       String              @db.LongText
+  size              business_size
+  users             User[]
+  businessLocations BusinessLocations[]
+  businessSocials   BusinessSocials?
+  role              Role[]
+  permission        Permission[]
+  rolePermission    RolePermission[]
+  inventory         Inventory[]
+  product           Product[]
+  supplier          Supplier[]
+  receiver          Receiver[]
+  inboundOrder      InboundOrder[]
+  outboundOrder     OutboundOrder[]
+  BusinessHours     BusinessHours[]
+
+  @@index([id, name, industry])
+}
+
+model BusinessLocations {
+  id            Int             @id @default(autoincrement())
+  business      Business        @relation(fields: [businessID], references: [id])
+  businessID    Int
+  name          String
+  street        String
+  city          String
+  state         String
+  postalCode    String?
+  country       String
+  timezone      String
+  description   String?         @db.LongText
+  businessHours BusinessHours[]
+}
+
+model BusinessSocials {
+  id         Int      @id @default(autoincrement())
+  business   Business @relation(fields: [businessID], references: [id])
+  businessID Int      @unique
+  Twitter    String?
+  Facebook   String?
+  LinkedIn   String?
+  Instagram  String?
+  Tiktok     String?
+}
+
+model BusinessHours {
+  id                Int               @id @default(autoincrement())
+  business          Business          @relation(fields: [businessID], references: [id])
+  businessID        Int
+  businessLocations BusinessLocations @relation(fields: [locationID], references: [id])
+  locationID        Int
+  day               week_days
+  start             String
+  end               String
+
+  @@index([day])
+}
+
+model User {
+  id               String          @id @unique @default(cuid())
+  firstName        String
+  lastName         String
+  email            String          @unique
+  password         String
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  business         Business        @relation(fields: [businessID], references: [id])
+  businessID       Int
+  deactivated      Boolean         @default(false)
+  role             Role            @relation(fields: [roleID], references: [id])
+  roleID           Int
+  createdInventory Inventory[]     @relation("createdInventory")
+  updatedInventory Inventory[]     @relation("updatedInventory")
+  createdProduct   Product[]       @relation("createdProduct")
+  updatedProduct   Product[]       @relation("updatedProduct")
+  createdSupplier  Supplier[]      @relation("createdSupplier")
+  updatedSupplier  Supplier[]      @relation("updatedSupplier")
+  createdReceiver  Receiver[]      @relation("createdReceiver")
+  updatedReceiver  Receiver[]      @relation("updatedReceiver")
+  createdInbound   InboundOrder[]  @relation("createdInbound")
+  updatedInbound   InboundOrder[]  @relation("updatedInbound")
+  createdOutbound  OutboundOrder[] @relation("createdOutbound")
+  updatedOutbound  OutboundOrder[] @relation("updatedOutbound")
+
+  @@index([businessID])
+}
+
+model Role {
+  id             Int              @id @default(autoincrement())
+  business       Business         @relation(fields: [businessID], references: [id])
+  businessID     Int
+  name           String
+  description    String           @db.MediumText
+  deleted        Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  user           User[]
+  RolePermission RolePermission[]
+
+  @@index([name])
+}
+
+model Permission {
+  id             Int              @id @default(autoincrement())
+  business       Business         @relation(fields: [businessID], references: [id])
+  businessID     Int
+  name           String
+  description    String           @db.MediumText
+  RolePermission RolePermission[]
+}
+
+model RolePermission {
+  id           Int        @id @default(autoincrement())
+  business     Business   @relation(fields: [businessID], references: [id])
+  businessID   Int
+  role         Role       @relation(fields: [roleId], references: [id])
+  roleId       Int
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  permissionId Int
+}
+
+model Inventory {
+  id          Int       @id @default(autoincrement())
+  business    Business  @relation(fields: [businessID], references: [id])
+  businessID  Int
+  name        String
+  description String    @db.MediumText
+  deleted     Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  created     User      @relation("createdInventory", fields: [createdBy], references: [id])
+  createdBy   String
+  update      User?     @relation("updatedInventory", fields: [updatedBy], references: [id])
+  updatedBy   String?
+  product     Product[]
+
+  @@index([name])
+}
+
+model Product {
+  id              Int             @id @default(autoincrement())
+  business        Business        @relation(fields: [businessID], references: [id])
+  businessID      Int
+  name            String
+  description     String          @db.Text
+  fullDescription String          @db.LongText
+  price           Float           @db.Float
+  quantity        Int
+  photo           String          @default("")
+  deleted         Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  inventory       Inventory       @relation(fields: [inventoryId], references: [id])
+  inventoryId     Int
+  create          User            @relation("createdProduct", fields: [createdBy], references: [id])
+  createdBy       String
+  update          User?           @relation("updatedProduct", fields: [updatedBy], references: [id])
+  updatedBy       String?
+  InboundOrder    InboundOrder[]
+  OutboundOrder   OutboundOrder[]
+
+  @@index([name, inventoryId])
+}
+
+model Supplier {
+  id           Int            @id @default(autoincrement())
+  business     Business       @relation(fields: [businessID], references: [id])
+  businessID   Int
+  name         String
+  phone        String
+  email        String?
+  address      String         @db.LongText
+  contactName  String?
+  contactPhone String?
+  contactEmail String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  create       User           @relation("createdSupplier", fields: [createdBy], references: [id])
+  createdBy    String
+  update       User           @relation("updatedSupplier", fields: [updatedBy], references: [id])
+  updatedBy    String
+  deleted      Boolean        @default(false)
+  InboundOrder InboundOrder[]
+
+  @@index([name])
+}
+
+model Receiver {
+  id            Int             @id @default(autoincrement())
+  business      Business        @relation(fields: [businessID], references: [id])
+  businessID    Int
+  name          String
+  phone         String
+  email         String?
+  address       String          @db.LongText
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  create        User            @relation("createdReceiver", fields: [createdBy], references: [id])
+  createdBy     String
+  update        User            @relation("updatedReceiver", fields: [updatedBy], references: [id])
+  updatedBy     String
+  deleted       Boolean         @default(false)
+  OutboundOrder OutboundOrder[]
+
+  @@index([name])
+}
+
+model InboundOrder {
+  id          Int          @id @default(autoincrement())
+  business    Business     @relation(fields: [businessID], references: [id])
+  businessID  Int
+  product     Product      @relation(fields: [productId], references: [id])
+  productId   Int
+  supplier    Supplier     @relation(fields: [supplierId], references: [id])
+  supplierId  Int
+  quantity    Int
+  orderStatus order_Status @default(pending)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  create      User         @relation("createdInbound", fields: [createdBy], references: [id])
+  createdBy   String
+  update      User         @relation("updatedInbound", fields: [updatedBy], references: [id])
+  updatedBy   String
+  deleted     Boolean      @default(false)
+  reference   String
+
+  @@index([productId, supplierId])
+}
+
+model OutboundOrder {
+  id          Int          @id @default(autoincrement())
+  business    Business     @relation(fields: [businessID], references: [id])
+  businessID  Int
+  orderId     String
+  product     Product      @relation(fields: [productId], references: [id])
+  productId   Int
+  receiver    Receiver     @relation(fields: [receiverId], references: [id])
+  receiverId  Int
+  quantity    Int
+  orderStatus order_Status
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  create      User         @relation("createdOutbound", fields: [createdBy], references: [id])
+  createdBy   String
+  update      User         @relation("updatedOutbound", fields: [updatedBy], references: [id])
+  updatedBy   String
+  deleted     Boolean      @default(false)
+
+  @@index([productId, receiverId])
+}
+
+enum business_size {
+  sole_Proprietorship
+  small
+  medium
+  large
+  enterprise
+}
+
+enum order_Status {
+  pending
+  processing
+  canceled
+  shipping
+  delivered
+}
+
+enum week_days {
+  Monday
+  Tuesday
+  Wednesday
+  Thursday
+  Friday
+  Saturday
+  Sunday
+}

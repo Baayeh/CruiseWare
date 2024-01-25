@@ -1,0 +1,20 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.validate": [
+        "javascript"
+    ],
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnPaste": false, // required 
+    "editor.formatOnType": false, // required
+    "editor.formatOnSave": true, // optional 
+    "git.ignoreLimitWarning": true,
+    "editor.formatOnSaveMode": "file", // required to format on save
+    "files.autoSave": "onFocusChange", // optional but recommended
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    },
+    "vs-code-prettier-eslint.prettierLast": false // set as "true" to run 'prettier' last not first
+  }
+  
